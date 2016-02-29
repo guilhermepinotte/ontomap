@@ -1,5 +1,6 @@
 package pkg;
 
+import java.io.Writer;
 import java.util.LinkedList;
 
 import org.apache.jena.datatypes.xsd.XSDDatatype;
@@ -26,15 +27,18 @@ public class Mapeador {
 //		this.setModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_LITE_MEM_RULES_INF)); //problemas aqui, PESQUISAR
 		
 		this.setModel(ModelFactory.createOntologyModel());
-		this.setNS("http:example.com/test#"); // PESQUISAR SOBRE URIs
+		this.setNS("http://example.com/test#"); // PESQUISAR SOBRE URIs
 		
-		OntClass classFrom = this.model.createClass(this.getNS() + "Carro");
-		classFrom.createIndividual(this.getNS() + "fusca");
+//		OntClass classFrom = this.model.createClass(this.getNS() + "Carro");
+//		classFrom.createIndividual(this.getNS() + "fusca");
+//		
+//		RDFWriter w = this.model.getWriter("RDF/XML-ABBREV");
+//////		w.setProperty("allowBadURIs", "true");
+//////		w.setProperty("relativeURIs","");
+//		w.write(this.model, System.out, "http://example.org/");
 		
-		RDFWriter w = this.model.getWriter("TURTLE");
-		w.setProperty("allowBadURIs", "true");
-		w.setProperty("relativeURIs","");
-		w.write(this.model, System.out, "TURTLE");
+//		this.model.write(System.out);
+		
 		
 	}
 
@@ -95,7 +99,7 @@ public class Mapeador {
 //					this.criaIndividuosDiferentes(p);
 					break;
 					
-				case "is attibute of": //relação: dataTypeObject-classe
+				case "is an attibute of": //relação: dataTypeObject-classe
 //					this.criaAtributoDeClasse(p);
 					break;
 					
@@ -130,8 +134,8 @@ public class Mapeador {
 	private void criaClasseSubClasse (Proposition p) {
 		String to = p.getTo().getLabel();
 		String from = p.getFrom().getLabel();
-		OntClass classTo = this.model.createClass(to);
-		OntClass classFrom = this.model.createClass(from);
+		OntClass classTo = this.model.createClass(this.getNS() + to);
+		OntClass classFrom = this.model.createClass(this.getNS() + from);
 		
 		//fazendo a classe From virar superclasse da To (HERANÇA)
 		classFrom.addSuperClass(classTo);
@@ -146,8 +150,8 @@ public class Mapeador {
 	private void criaClassesEquivalentes (Proposition p) {
 		String to = p.getTo().getLabel();
 		String from = p.getFrom().getLabel();
-		OntClass classTo = this.model.createClass(to);
-		OntClass classFrom = this.model.createClass(from);
+		OntClass classTo = this.model.createClass(this.getNS() + to);
+		OntClass classFrom = this.model.createClass(this.getNS() + from);
 		
 		classFrom.addEquivalentClass(classTo);
 	}
@@ -161,8 +165,8 @@ public class Mapeador {
 	private void criaClassesDisjuntas (Proposition p) {
 		String to = p.getTo().getLabel();
 		String from = p.getFrom().getLabel();
-		OntClass classTo = this.model.createClass(to);
-		OntClass classFrom = this.model.createClass(from);
+		OntClass classTo = this.model.createClass(this.getNS() + to);
+		OntClass classFrom = this.model.createClass(this.getNS() + from);
 		
 		classFrom.addDisjointWith(classTo);
 	}
@@ -177,8 +181,8 @@ public class Mapeador {
 	private void criaComplementoDeClasses (Proposition p) {
 		String to = p.getTo().getLabel();
 		String from = p.getFrom().getLabel();
-		OntClass classTo = this.model.createClass(to);
-		OntClass classFrom = this.model.createClass(from);
+		OntClass classTo = this.model.createClass(this.getNS() + to);
+		OntClass classFrom = this.model.createClass(this.getNS() + from);
 		
 		classFrom.convertToComplementClass(classTo);
 	}
@@ -194,11 +198,8 @@ public class Mapeador {
 		String to = p.getTo().getLabel();
 		String from = p.getFrom().getLabel();
 		
-//		System.out.println("################# " + from + " #################");
-		
-//		OntClass classTo = this.model.createClass(to);
-		OntClass classFrom = this.model.createClass(from);
-		classFrom.createIndividual(this.getNS() + to);
+		OntClass classFrom = this.model.createClass(this.getNS() + to);
+		classFrom.createIndividual(this.getNS() + from);
 	}
 
 	/**
@@ -208,36 +209,36 @@ public class Mapeador {
 	 * @author Guilherme N. Pinotte
 	 * 
 	 */
-//	private void criaIndividuosIguais (Proposition p) {
-//		String to = p.getTo().getLabel();
-//		String from = p.getFrom().getLabel();
-//		Individual iFrom = null;
-//		Individual iTo = null;
-//		
-//		//ANALISAR MELHOR ESSE MÉTODO, POIS PARA CRIAR UMA INSTANCIA PRIMEIRO É NECESSÁRIO CRIAR UMA CLASSE
-//		//TALVEZ DE PARA CRIAR UMA INSTANCIA DESSA FORMA: this.model.createIndividual(from, iFrom);
-//		
-//		// 
-//		
-//		
-//		for (OntClass o : this.model.listClasses().toList()) {
-//			for (OntResource  ind : o.listInstances().toList()) {
-////				ind = (Individual) ind;
-//				if (ind.getLocalName().equalsIgnoreCase(from)) {
-//					iFrom = (Individual) ind;
-//				}
-//			}
-//			for (OntResource  ind : o.listInstances().toList()) {
-////				ind = (Individual) ind;
-//				if (ind.getLocalName().equalsIgnoreCase(to)) {
-//					iTo = (Individual) ind;
-//				}
-//			}
-//		}
-//		if (iFrom != null && iTo != null)
-//			iFrom.addSameAs(iTo);
-//		
-//	}
+	private void criaIndividuosIguais (Proposition p) {
+		String to = p.getTo().getLabel();
+		String from = p.getFrom().getLabel();
+		Individual iFrom = null;
+		Individual iTo = null;
+		
+		//ANALISAR MELHOR ESSE MÉTODO, POIS PARA CRIAR UMA INSTANCIA PRIMEIRO É NECESSÁRIO CRIAR UMA CLASSE
+		//TALVEZ DE PARA CRIAR UMA INSTANCIA DESSA FORMA: this.model.createIndividual(from, iFrom);
+		
+		// TESTAR ISSO ###########################
+		
+		
+		for (OntClass o : this.model.listClasses().toList()) {
+			for (OntResource  ind : o.listInstances().toList()) {
+//				ind = (Individual) ind;
+				if (ind.getLocalName().equalsIgnoreCase(from)) {
+					iFrom = (Individual) ind;
+				}
+			}
+			for (OntResource  ind : o.listInstances().toList()) {
+//				ind = (Individual) ind;
+				if (ind.getLocalName().equalsIgnoreCase(to)) {
+					iTo = (Individual) ind;
+				}
+			}
+		}
+		if (iFrom != null && iTo != null)
+			iFrom.addSameAs(iTo);
+		
+	}
 	
 	/**
 	 * Método que cria duas classes e uma object property
@@ -248,8 +249,8 @@ public class Mapeador {
 	private void criaRelacaoSemEsteriotipo (Proposition p) {
 		String to = p.getTo().getLabel();
 		String from = p.getFrom().getLabel();
-		OntClass classTo = this.model.createClass(to);
-		OntClass classFrom = this.model.createClass(from);
+		OntClass classTo = this.model.createClass(this.getNS() + to);
+		OntClass classFrom = this.model.createClass(this.getNS() + from);
 		ObjectProperty relation = this.model.createObjectProperty(p.getRel().getLabel());
 		
 		relation.addDomain(classFrom);

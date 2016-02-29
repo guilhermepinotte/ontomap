@@ -37,7 +37,7 @@ public class Services {
 		System.out.println(criador);
 		
 		Mapeador mapeador = new Mapeador();
-//		mapeador.fazMapeamento(criador.getPropositions());
+		mapeador.fazMapeamento(criador.getPropositions());
 		
 		
 //		criador.imprimeArray(criador.getNodeDataArray());
