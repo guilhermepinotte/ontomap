@@ -17,6 +17,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFWriter;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.XSD;
 
 import models.Proposition;
 
@@ -327,17 +328,24 @@ public class Mapeador {
 		String sAttr = p.getTo().getLabel();
 		String from = p.getFrom().getLabel();
 		DatatypeProperty attr = this.model.createDatatypeProperty(this.getNS() + from);
+		Resource r = null;
 		
+		//olhar quais outros tipos acrescentar nessa lista
 		switch (sAttr) {
 		case "String":
-			
+			r = XSD.xstring;
 			break;
-
+		case "Integer":
+			r = XSD.xint;
+			break;
+		case "Date":
+			r = XSD.date;
+			break;
+					
 		default:
 			break;
-		}
-		
-//		attr.addRange(classTo);
+		}	
+		attr.addRange(r);
 	}
 	
 	
