@@ -1,5 +1,7 @@
 package pkg;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.LinkedList;
 
@@ -116,12 +118,30 @@ public class Mapeador {
 	
 	public void imprimeOWL () {
 		
-//		out = new FileWriter( "mymodel.xml" );
+		FileWriter out = null;
+//		RDFWriter w = this.model.getWriter("RDF/XML");
+		
+		try {
+			out = new FileWriter( "mymodel.owl" );
+			this.model.write(out, "TURTLE");
+		} catch (Exception e) {
+			System.out.print("Deu erro!\n");
+			System.out.print(e);
+		} finally {
+			if (out != null) {
+			    try {
+			    	out.close();
+			    } catch (IOException ignore) {
+	
+			    }
+		    }
+		}
+		
 //		m.write( out, "RDF/XML-ABBREV" );
 		
-		RDFWriter w = this.model.getWriter("RDF/XML");
+		
 //		w.setProperty("allowBadURIs","true");
-		w.write(this.model, System.out, "RDF/XML");
+		
 	}
 	
 	
