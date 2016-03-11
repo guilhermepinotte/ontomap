@@ -1,5 +1,6 @@
 package pkg;
 
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -116,28 +117,27 @@ public class Mapeador {
 	}
 	
 	
-	public void imprimeOWL () {
-		
+	public void imprimeOWL () {	
 		FileWriter out = null;
-//		RDFWriter w = this.model.getWriter("RDF/XML");
+		RDFWriter w = this.model.getWriter("RDF/XML-ABBREV");
 		
 		try {
-			out = new FileWriter( "mymodel.owl" );
-			this.model.write(out, "TURTLE");
-		} catch (Exception e) {
-			System.out.print("Deu erro!\n");
+			out = new FileWriter("mymodel.owl", false);
+			w.write(this.model, out, "RDF/XML-ABBREV" );
+		} catch (IOException e) {
 			System.out.print(e);
 		} finally {
 			if (out != null) {
 			    try {
 			    	out.close();
 			    } catch (IOException ignore) {
-	
+			    	System.out.print(ignore);
 			    }
 		    }
 		}
 		
-//		m.write( out, "RDF/XML-ABBREV" );
+//		RDFWriter w = this.model.getWriter("RDF/XML-ABBREV");
+//		w.write(this.model, System.out, "RDF/XML-ABBREV" );
 		
 		
 //		w.setProperty("allowBadURIs","true");

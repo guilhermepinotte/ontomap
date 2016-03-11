@@ -15,8 +15,8 @@
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
   <filter>
-    <filter-name>CorsFilter</filter-name>
-    <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+    <filter-name>CORS</filter-name>
+    <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
     <init-param>
       <param-name>cors.allowed.origins</param-name>
       <param-value>*</param-value>
@@ -43,7 +43,7 @@
     </init-param>
   </filter>
   <filter-mapping>
-    <filter-name>CorsFilter</filter-name>
+    <filter-name>CORS</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 </web-app>

@@ -1,10 +1,14 @@
 package br.com.restfull.resource;
 
+import java.io.File;
+
+import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,23 +33,41 @@ public class Services {
 	@Path("/service")
 	@Consumes("application/json")
 	@Produces("text/plain")
+//	@Produces("application/xml")
 	public Response mappingService(String map) {
-		String output = "Olá Mundo!";
+		String output = "Deu Zika!";
+		System.out.println(output);
+		
+		
+		File file = new File("mymodel.owl");
 		
 		Criador criador = new Criador(map);
 		criador.leMapa();
 		System.out.println(criador);
-		
+				
 		Mapeador mapeador = new Mapeador();
 		mapeador.fazMapeamento(criador.getPropositions());
 		
+		String mt = new MimetypesFileTypeMap().getContentType(file);
+//		System.out.println(mt);
 		
-//		criador.imprimeArray(criador.getNodeDataArray());
-//		criador.imprimeArray(criador.getLinkDataArray());
+//		if (!file.exists()) 
+//		    throw new WebApplicationException(404);
+//		else
+//			return Response.ok(file,mt)
+//					.header("Access-Control-Allow-Origin", "*")
+//					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+//					.build();
 		
+		return Response.ok(output)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
 		
-				
-		return Response.ok(output).header("Access-Control-Allow-Origin", "*").build();
+//		if(file.exists())
+//			
+//		else
+//			return Response.ok(output).header("Access-Control-Allow-Origin", "*").build();
 	}
 	
 }
