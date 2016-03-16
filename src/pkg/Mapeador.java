@@ -223,7 +223,7 @@ public class Mapeador {
 		String from = p.getFrom().getLabel();
 		
 		OntClass classFrom = this.model.createClass(this.getNS() + to);
-		classFrom.createIndividual(this.getNS() + from);
+		classFrom.createIndividual(this.getNS() + from);		
 	}
 	
 	
