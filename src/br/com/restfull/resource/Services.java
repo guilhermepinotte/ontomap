@@ -8,11 +8,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import pkg.Criador;
 import pkg.Mapeador;
+import pkg.Raciocinador;
 
 @Path("/ontomap")
 public class Services {
@@ -31,9 +33,6 @@ public class Services {
 //	@Produces(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response mappingService(String map) {
-		String output = "Deu Zika";
-		
-
 		File file = new File("mymodel.owl");
 
 		Criador criador = new Criador(map);
@@ -43,26 +42,25 @@ public class Services {
 		Mapeador mapeador = new Mapeador();
 		mapeador.fazMapeamento(criador.getPropositions());
 
-		String mt = new MimetypesFileTypeMap().getContentType(file);
-		// System.out.println(mt);
+//		String mt = new MimetypesFileTypeMap().getContentType(file);
+		
+		Raciocinador rac = new Raciocinador("mymodel.owl");
+		rac.validation("mymodel.owl");
+//		rac.validation(mapeador.getModel());
+		
+//		rac.getInstancesFromClass("Professor");
 
-		// if (!file.exists())
-		// throw new WebApplicationException(404);
-		// else
-		 return Response.ok(file,MediaType.APPLICATION_XML)
+		Raciocinador.teste("mymodel.owl");
+
+		 if (!file.exists())
+			 throw new WebApplicationException(404);
+		 else
+			 return Response.ok(file,MediaType.APPLICATION_XML).build();
 //		 .header("Access-Control-Allow-Origin", "*")
 //		 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-		 .build();
-
-//		System.out.println(output);
 		
 //		return Response.ok(output,MediaType.TEXT_PLAIN).build();
 
-		// if(file.exists())
-		//
-		// else
-		// return Response.ok(output).header("Access-Control-Allow-Origin",
-		// "*").build();
 	}
 
 }

@@ -32,7 +32,7 @@ public class Mapeador {
 		super();
 //		this.setModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_LITE_MEM_RULES_INF)); //problemas aqui, PESQUISAR
 		
-		this.setModel(ModelFactory.createOntologyModel());
+		this.setModel(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM));
 		this.setNS("http://example.com/test#"); // PESQUISAR SOBRE URIs
 		
 //		OntClass classFrom = this.model.createClass(this.getNS() + "Carro");
