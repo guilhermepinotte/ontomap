@@ -15,6 +15,7 @@ import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.ontology.OntResource;
+import org.apache.jena.ontology.Restriction;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -85,7 +86,7 @@ public class Mapeador {
 					break;
 					
 				case "is composed of": //relação: relação de todo-parte
-//					this.criaRelaçãoTodoParte(p);
+					this.criaRelaçãoTodoParte(p);
 					break;
 					
 				case "is a": //relação: indivíduo-classe
@@ -211,6 +212,31 @@ public class Mapeador {
 	}
 	
 
+	/**
+	 * Método que cria classes compostas por outras classes (From isComposedOf To)
+	 * Exemplo: Fumantes e Não Fumantes são complementares
+	 * 
+	 * @author Guilherme N. Pinotte
+	 * 
+	 */
+	private void criaRelaçãoTodoParte (Proposition p) {
+		String to = p.getTo().getLabel();
+		String from = p.getFrom().getLabel();
+		OntClass classTo = this.model.createClass(this.getNS() + to);
+		OntClass classFrom = this.model.createClass(this.getNS() + from);
+		classFrom.addSuperClass(classTo);
+		
+		ObjectProperty relation = this.model.createObjectProperty(p.getRel().getLabel());
+		ObjectProperty subRelation = this.model.createObjectProperty("is composed of directly");
+		relation.addSubProperty(subRelation);
+		relation.convertToTransitiveProperty();
+	
+//		Restriction r = this.model.createRestriction(subRelation);
+		
+		this.model.createSomeValuesFromRestriction(null, subRelation, classTo);
+	}
+	
+	
 	/**
 	 * Método que cria instância de uma classe (From é indivíduo de To)
 	 * Exemplo: Fumantes e Não Fumantes são complementares
